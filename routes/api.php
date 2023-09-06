@@ -113,7 +113,7 @@ Route::prefix('dashboard')->middleware('auth:api')->group(function () {
 
     //Galary
     Route::post('galary', [GalaryController::class, 'storeImages']);
-    Route::get('galary', [GalaryController::class, 'filteredImages']);
+    Route::get('galary', [GalaryController::class, 'index']);
     Route::post('videos', [GalaryController::class, 'storeVideos']);
     Route::get('videos', [GalaryController::class, 'filteredVideos']);
 

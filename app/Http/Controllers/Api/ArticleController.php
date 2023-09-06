@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiResponseTrait;
 use App\Http\Resources\ArticleResource;
-use App\Http\Requests\{StoreArticle, UpdateArticle};
+use App\Http\Requests\Article\{StoreArticle, UpdateArticle};
 
 
 class ArticleController extends Controller
