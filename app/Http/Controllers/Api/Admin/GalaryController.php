@@ -10,11 +10,14 @@ use App\Http\Resources\VideoResource;
 use App\Models\Galary;
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+
+use function PHPSTORM_META\type;
 
 class GalaryController extends Controller
 {
-    public function filteredImages(Request $request)
+    public function index(Request $request)
     {
         $rules = [
             'type' => 'in:Events,Nature,Activity,Chalet,Restaurant',
@@ -27,40 +30,46 @@ class GalaryController extends Controller
                 'message' => $validator->errors()->all(),
             ], 422);
         }
+        $select = "SELECT typy from galaries";
+        $q = Galary::select(DB::raw($select));
+        if ($request->type)
+            $q->whereIn('type', $request->type);
+            
+          return   $q->get();
 
-        $type = $request->query('type');
-        $imageQuery = Galary::query();
+        //    $type = $request->query('type');
+        //     $imageQuery = Galary::query();
 
-        if ($type) {
-            $imageQuery = $imageQuery->where('type', 'LIKE', '%' . $type . '%');
-        }
-        $filteredImages = $imageQuery->get();
-        if ($type === 'Events') {
-            return response()->json([
-                'events' => GalaryResource::collection($filteredImages),
-            ], 200);
-        } elseif ($type === 'Nature') {
-            return response()->json([
-                'nature' => GalaryResource::collection($filteredImages),
-            ], 200);
-        } elseif ($type === 'Activity') {
-            return response()->json([
-                'activities' => GalaryResource::collection($filteredImages),
-            ], 200);
-        } elseif ($type === 'Chalet') {
-            return response()->json([
-                'chalets' => GalaryResource::collection($filteredImages),
-            ], 200);
-        } elseif ($type === 'Restaurant') {
-            return response()->json([
-                'restaurants' => GalaryResource::collection($filteredImages),
-            ], 200);
-        } else {
-            // Return all images if no specific type is provided
-            return response()->json([
-                'images' => GalaryResource::collection($filteredImages),
-            ], 200);
-        }
+        //     if ($type) {
+        //         $imageQuery = $imageQuery->where('type', 'LIKE', '%' . $type . '%');
+        //     }
+        //     $filteredImages = $imageQuery->get();
+        //     if ($type === 'Events') {
+        //         return response()->json([
+        //             'events' => GalaryResource::collection($filteredImages),
+        //         ], 200);
+        //     } elseif ($type === 'Nature') {
+        //         return response()->json([
+        //             'nature' => GalaryResource::collection($filteredImages),
+        //         ], 200);
+        //     } elseif ($type === 'Activity') {
+        //         return response()->json([
+        //             'activities' => GalaryResource::collection($filteredImages),
+        //         ], 200);
+        //     } elseif ($type === 'Chalet') {
+        //         return response()->json([
+        //             'chalets' => GalaryResource::collection($filteredImages),
+        //         ], 200);
+        //     } elseif ($type === 'Restaurant') {
+        //         return response()->json([
+        //             'restaurants' => GalaryResource::collection($filteredImages),
+        //         ], 200);
+        //     } else {
+        //         // Return all images if no specific type is provided
+        //         return response()->json([
+        //             'images' => GalaryResource::collection($filteredImages),
+        //         ], 200);
+        //     }
     }
 
     public function storeImages(StoreRequest $request)
